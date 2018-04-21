@@ -4,6 +4,6 @@ from django.contrib import admin
 from apps.goods import views
 
 urlpatterns = [
-    url(r'^', views.index),
+    url(r'^index$', views.index),
 ]
 

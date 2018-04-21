@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
-from django.conf.global_settings import AUTH_USER_MODEL
+from django.conf.global_settings import AUTH_USER_MODEL, STATICFILES_DIRS
 from testtinymce.settings import MEDIA_ROOT, TINYMCE_DEFAULT_CONFIG
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -122,7 +122,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIR = [os.path.join(BASE_DIR,'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
 
 #上传文件目录
 MEDIA_ROOT = os.path.join(BASE_DIR,'/static/media')
