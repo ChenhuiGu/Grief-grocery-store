@@ -3,7 +3,11 @@ from django.db.utils import IntegrityError
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.generic.base import View
+from itsdangerous import TimedJSONWebSignatureSerializer, SignatureExpired
+from celery_task.tasks import send_active_email
+from Mystore import settings
 from apps.users.models import User
+
 
 
 def register(request):
@@ -81,13 +85,40 @@ class RegisterView(View):
             # 判断用户是否存在
         user = None
         try:
+            #django内置函数，自动创建用户
             user = User.objects.create_user(username=username, email=email,
-                                            password=password)
+                                            password=password)  # type: User
             user.is_active = False
+            #存储用户
+            user.save()
+            #命名重复发生异常
         except IntegrityError:
             return render(request, 'register.html', {'message': '用户已经存在'})
 
-        # todo 发送激活邮件
+        #发送激活邮件
+        #user_id加密后的结果称之为 token(口令、令牌)
+        token = user.active_token()
 
+        # send_active_email(username,email,token)
+        #使用celery异步发送激活邮件
+        send_active_email.delay(username,email,token)
         # 响应请求
         return HttpResponse('注册成功')
+
+
+class ActiveView(View):
+    def get(self,request,token:str):
+        #得到用户id
+        try:
+            s = TimedJSONWebSignatureSerializer(settings.SECRET_KEY)
+            print(token)
+            info = s.loads(token)
+            user_id = info['confirm']
+        except SignatureExpired:
+            return HttpResponse('链接已经过期')
+
+        User.objects.filter(id=user_id).update(is_active=True)
+        return HttpResponse('激活成功，进入登陆页面')
+
+
+

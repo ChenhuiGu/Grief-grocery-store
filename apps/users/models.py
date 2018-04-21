@@ -1,19 +1,26 @@
-from django.conf.project_template.project_name import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 #使用Django自带的用户认证模块
 from itsdangerous import TimedJSONWebSignatureSerializer
 
+from Mystore import settings
 from utils.models import BaseModel
 
 
 class User(BaseModel,AbstractUser):
     """用户信息模型类"""
+    # itsdangerous生成激活token
     def active_token(self):
-        s = TimedJSONWebSignatureSerializer(settings.SECRET_KEY,60*60*24)
-        datas = s.dumps({'confirm':self.id})  #type = date
+        """对字典数据{‘confirm’:10}加密，返回加密后的结果"""
+        # 参数1：密钥
+        # 参数２：有效时间　一天
+        s = TimedJSONWebSignatureSerializer(settings.SECRET_KEY, 60*60*24)
+        #隐性表明变量的类型
+        datas = s.dumps({'confirm': self.id})  # type: bytes
+        # bytes-->str
         return datas.decode()
+
     class Meta(object):
         db_table = 'df_user'
 

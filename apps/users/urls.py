@@ -7,5 +7,6 @@ urlpatterns = [
     # url(r'^register$',views.register),
     # url(r'^do_register$',views.do_register)
     #类视图同时处理get和post请求
-    url(r'^register$',views.RegisterView.as_view(),name='register')
+    url(r'^register$',views.RegisterView.as_view(),name='register'),
+    url(r'^active/(.+)$',views.ActiveView.as_view(),name='active')
 ]
