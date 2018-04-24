@@ -1,4 +1,5 @@
-# Python:
+pip install requests
+pip install mutagen# Python:
 *.py[cod]
 *.so
 *.egg

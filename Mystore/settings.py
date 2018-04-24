@@ -101,6 +101,23 @@ DATABASES = {
         'PORT':3306
     }
 }
+
+# django项目的缓存配置
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD": ""
+        }
+    }
+}
+
+# session数据缓存到Redis中
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
 # 邮件发送配置
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'    # 导入邮件模块
 EMAIL_HOST = 'smtp.163.com'                 # 邮箱服务器地址（不同公司的邮箱服务器地址不一样）
@@ -122,6 +139,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_URL = '/users/login'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
@@ -132,3 +150,6 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
 
 #上传文件目录
 MEDIA_ROOT = os.path.join(BASE_DIR,'/static/media')
+
+# 配置Django自定义的存储系统
+DEFAULT_FILE_STORAGE = "utils.fdfs.storage.FdfsStorage"

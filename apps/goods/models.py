@@ -8,10 +8,9 @@ class GoodsCategory(BaseModel):
     """商品类别表"""
     name = models.CharField(max_length=20, verbose_name="类别名称")
     logo = models.CharField(max_length=100, verbose_name="图标标识")
-    #上传图片到static/media/category
+    #存储于FastDFS
     image = models.ImageField(upload_to="category", verbose_name="类别图片")
 
-    #??
     def __str__(self):
         return self.name
 
